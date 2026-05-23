@@ -1,6 +1,6 @@
-#include <stdio.h>
 #include "mqtt.h"
 
+#include <stdio.h>
 #include <Arduino.h>
 
 #include "config.h"
@@ -45,6 +45,12 @@ void reconnect(PubSubClient& client) {
 void publish(PubSubClient& client, const char* topic, float data) {
   char msg[16];
   snprintf(msg, sizeof(msg), "%.2f", data);
+  client.publish(topic, msg);
+}
+
+void publish(PubSubClient& client, const char* topic, uint16_t data) {
+  char msg[16];
+  snprintf(msg, sizeof(msg), "%u", data);
   client.publish(topic, msg);
 }
 

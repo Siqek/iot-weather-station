@@ -1,4 +1,3 @@
-#include "Arduino.h"
 #include "bme280.h"
 
 #include <Wire.h>
