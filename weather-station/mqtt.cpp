@@ -26,9 +26,9 @@ void reconnect(PubSubClient& client) {
 
     // --- LWT CONFIGURATION ---
     // define Last Will: Topic, QoS, Retain, Message
-    // If this ESP32 dies, the Broker will post "offline" to the status topic automatically.
+    // If this ESP32 dies, the Broker will post "offline" to the lwt topic automatically.
 
-    if (client.connect(mqtt::DEVICE_ID, mqtt::USER, mqtt::PASSWORD, mqtt::topics::STATUS, 1, true, "offline")) {
+    if (client.connect(mqtt::DEVICE_ID, mqtt::USER, mqtt::PASSWORD, mqtt::topics::LWT, 1, true, "offline")) {
       Serial.println("connected");
 
       // Once connected, publish an announcement that we are alive (Retained = true)

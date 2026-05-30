@@ -6,6 +6,7 @@
 #include "mqtt.h"
 #include "bme280.h"
 #include "pmsa003.h"
+#include "mq9.h"
 
 #include "config.h"
 
@@ -22,12 +23,14 @@ void setup() {
 
   bme280::setup();
   pmsa003::setup();
+  mq9::setup();
 }
 
 static float temperature = 0.f;
 static float humidity = 0.f;
 static float pressure = 0.f;
 static PM25_AQI_Data aqiData{};
+static mq9::SensorData gasReadings;
 
 void loop() {
   wifi::ensureConnection();
@@ -49,6 +52,12 @@ void loop() {
     mqtt::publish(client, mqtt::topics::PM1_0_LAST, aqiData.pm10_env);
     mqtt::publish(client, mqtt::topics::PM2_5_LAST, aqiData.pm25_env);
     mqtt::publish(client, mqtt::topics::PM10_LAST, aqiData.pm100_env);
+  }
+
+  if (mq9::readSensorData(gasReadings)) {
+    mqtt::publish(client, mqtt::topics::LGP_LAST, gasReadings.lpgPpm);
+    mqtt::publish(client, mqtt::topics::METHANE_LAST, gasReadings.methanePpm);
+    mqtt::publish(client, mqtt::topics::CARBON_MONOXIDE_LAST, gasReadings.carbonMonoxidePpm);
   }
 
   delay(500);
